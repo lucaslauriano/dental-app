@@ -5,8 +5,9 @@ Data: 2026-10-16
 
 ## 1. Visão
 
-Plataforma multi-tenant para redes odontológicas com várias unidades.
-Cada rede gerencia pacientes, agenda, prontuário, orçamentos, financeiro e anexos.
+Plataforma multi-tenant para clínicas odontológicas.
+Na criação da conta, o usuário escolhe o tipo: clínica única ou rede com várias unidades.
+Cada organização gerencia pacientes, agenda, prontuário, orçamentos, financeiro e anexos.
 O paciente não tem conta nem login. Ele interage por links seguros e por mensagens.
 
 Projeto também serve como aprendizado de backend e frontend.
@@ -16,8 +17,8 @@ Por isso o desenvolvimento é incremental e cada decisão é documentada.
 
 ### Usuários com login
 
-- Administrador da rede: configura unidades, profissionais, permissões e planos.
-- Administrador da unidade: gerencia a operação de uma unidade. (a confirmar)
+- Administrador da organização: configura unidades (se for rede), profissionais, permissões e planos.
+- Administrador da unidade: gerencia a operação de uma unidade. Só existe em organizações do tipo rede. (a confirmar)
 - Dentista e demais profissionais: atendem, registram prontuário, criam orçamentos.
 - Recepção e assistentes: agenda, cadastro, cobrança, confirmações.
 
@@ -28,10 +29,16 @@ Por isso o desenvolvimento é incremental e cada decisão é documentada.
 
 ## 3. Modelo de organização (multi-tenancy)
 
-- Tenant: a rede.
-- Unidade: filial dentro da rede.
-- Usuário: pertence a uma rede e pode atuar em uma ou mais unidades.
+- Tenant: a organização. Pode ser uma clínica única ou uma rede.
+- Unidade: local de atendimento dentro da organização.
+- Tipo de conta: escolhido pelo usuário na criação.
+  - Clínica única: organização com exatamente 1 unidade.
+  - Rede: organização com 2 ou mais unidades.
+- Modelo único: clínica única e rede usam o mesmo modelo de dados e a mesma API.
+  Na clínica única, a interface esconde seleção de unidade e relatórios consolidados.
+- Usuário: pertence a uma organização e pode atuar em uma ou mais unidades.
 - Todo dado de negócio pertence a um tenant. Dados clínicos também pertencem a uma unidade.
+- Conversão de clínica única para rede: adicionar unidades, sem migração de dados. (a confirmar)
 
 A estratégia técnica de isolamento será definida em ADR próprio.
 
@@ -82,7 +89,8 @@ Base obrigatória antes do módulo 1: autenticação, autorização, tenants, un
 
 ## 8. Suposições a confirmar
 
-- Escala inicial: dezenas de redes no primeiro ano.
+- Escala inicial: dezenas de organizações (clínicas únicas e redes) no primeiro ano.
+- Clínica única pode virar rede depois, sem migrar dados.
 - Primeiro usuário real: consultório da esposa do autor.
 - Idioma da interface: português do Brasil.
 - Região do Google Cloud: a definir (custo, latência e LGPD).
